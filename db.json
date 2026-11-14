@@ -82,10 +82,10 @@
       "miles": 0
     },
     {
-      "name": "test2",
+      "name": "Client_Mino",
       "address": "test calle test",
       "phone": "23422342342",
-      "email": "test2@g.com",
+      "email": "Client_Mino@g.com",
       "password": "12345678",
       "company": "",
       "rnc": "",
@@ -94,10 +94,10 @@
       "id": 2
     },
     {
-      "name": "test3c",
+      "name": "Client_Corp",
       "address": "test calle test",
       "phone": "23423423423423",
-      "email": "test3c@g.com",
+      "email": "Client_Corp@g.com",
       "password": "12345678",
       "company": "asdfasdfadf",
       "rnc": "234dfs4f4",

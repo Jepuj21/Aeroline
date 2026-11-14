@@ -10,6 +10,7 @@ let flightsCache = [];
 const elements = {
   accountToggle: document.querySelector("#account-toggle"),
   registerToggle: document.querySelector("#register-toggle"),
+  reservationsToggle: document.querySelector("#reservations-toggle"),
   logoutButton: document.querySelector("#logout-button"),
   loginDialog: document.querySelector("#login-dialog"),
   registerDialog: document.querySelector("#register-dialog"),
@@ -57,6 +58,7 @@ async function initialize() {
 function bindEvents() {
   elements.accountToggle.addEventListener("click", () => toggleAccount("login"));
   elements.registerToggle.addEventListener("click", () => toggleAccount("register"));
+  elements.reservationsToggle.addEventListener("click", toggleReservationsPanel);
   elements.loginClose.addEventListener("click", () => elements.loginDialog.close());
   elements.registerClose.addEventListener("click", () => elements.registerDialog.close());
   elements.logoutButton.addEventListener("click", logout);
@@ -169,6 +171,22 @@ function toggleAccount(formName) {
   targetForm.querySelector("input").focus();
 }
 
+// Alterna la vista de reservas para clientes autenticados.
+function toggleReservationsPanel() {
+  if (!currentUser || currentUser.role === "agent") {
+    return;
+  }
+
+  const isHidden = elements.profileSection.hidden;
+  elements.profileSection.hidden = !isHidden;
+  elements.reservationsToggle.setAttribute("aria-expanded", String(!elements.profileSection.hidden));
+  elements.reservationsToggle.classList.toggle("is-active", !elements.profileSection.hidden);
+
+  if (!elements.profileSection.hidden) {
+    elements.profileSection.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+}
+
 // Filtra los vuelos locales por ruta, fecha y hora de salida seleccionadas.
 async function searchFlights(event) {
   event.preventDefault();
@@ -233,12 +251,12 @@ function renderFlights(flights) {
           <select name="seat">${seatOptions}</select>
         </label>
         ${mileageInput}
-        <button class="button button-primary" type="button" data-action="reserve" data-flight-id="${escapeHtml(flight.id)}">Reservar vuelo</button>
+        <button class="button button-primary reserve-action-button" type="button" data-action="reserve" data-flight-id="${escapeHtml(flight.id)}">Reservar vuelo</button>
       `;
     } else if (currentUser?.role === "agent") {
-      bookingContent = '<p class="booking-hint">La cuenta de agente gestiona vuelos; inicia sesión como cliente para reservar.</p>';
+      bookingContent = '<p class="booking-hint"><button class="inline-link" type="button" data-action="open-login">Inicia sesión</button> como cliente para reservar.</p>';
     } else {
-      bookingContent = '<p class="booking-hint">Inicia sesión como cliente registrado para seleccionar un asiento y reservar.</p>';
+      bookingContent = '<p class="booking-hint"><button class="inline-link" type="button" data-action="open-login">Inicia sesión</button> como cliente registrado para seleccionar un asiento y reservar.</p>';
     }
 
     return `
@@ -357,12 +375,16 @@ async function updateAccountView() {
   elements.accountToggle.hidden = Boolean(currentUser);
   elements.registerToggle.hidden = Boolean(currentUser);
   elements.logoutButton.hidden = !currentUser;
+  elements.reservationsToggle.hidden = !currentUser || currentUser.role === "agent";
 
   if (currentUser) {
     elements.logoutButton.textContent = `Cerrar sesión (${currentUser.name})`;
   }
 
-  elements.profileSection.hidden = !currentUser || currentUser.role === "agent";
+  const isClient = Boolean(currentUser) && currentUser.role !== "agent";
+  elements.profileSection.hidden = !isClient;
+  elements.reservationsToggle.setAttribute("aria-expanded", String(!elements.profileSection.hidden));
+  elements.reservationsToggle.classList.toggle("is-active", !elements.profileSection.hidden);
   elements.agentSection.hidden = !currentUser || currentUser.role !== "agent";
   await loadFlights();
 
@@ -387,12 +409,21 @@ function logout() {
   elements.agentSection.hidden = true;
   elements.accountToggle.hidden = false;
   elements.registerToggle.hidden = false;
+  elements.reservationsToggle.hidden = true;
+  elements.reservationsToggle.setAttribute("aria-expanded", "false");
+  elements.reservationsToggle.classList.remove("is-active");
   elements.logoutButton.hidden = true;
   renderFlights(flightsCache);
 }
 
 // Maneja la reserva de un asiento y la acumulación o redención de millas.
 async function handleFlightAction(event) {
+  const loginLink = event.target.closest("[data-action='open-login']");
+  if (loginLink) {
+    toggleAccount("login");
+    return;
+  }
+
   const button = event.target.closest("[data-action='reserve']");
 
   if (!button) {
@@ -414,6 +445,11 @@ async function handleFlightAction(event) {
     showMessage(elements.searchMessage, "La cantidad de millas debe ser un número entero dentro de tu saldo.", "error");
     return;
   }
+
+  const originalButtonHtml = button.innerHTML;
+  button.disabled = true;
+  button.classList.add("is-loading");
+  button.innerHTML = '<span class="button-spinner" aria-hidden="true"></span><span>Reservando...</span>';
 
   try {
     const flight = await api(`/flights/${encodeURIComponent(flightId)}`);
@@ -490,9 +526,12 @@ async function handleFlightAction(event) {
     }
 
     // Sugerencia: conectar aquí el gestor de mails requerido para enviar confirmaciones reales.
-    showMessage(elements.searchMessage, `Reserva ${reservation.id} confirmada. La notificación por correo se simula localmente.`, "success");
+    showMessage(elements.searchMessage, `✈ Reserva ${reservation.id} confirmada. La notificación por correo se simula localmente.`, "success");
     await updateAccountView();
   } catch (error) {
+    button.disabled = false;
+    button.classList.remove("is-loading");
+    button.innerHTML = originalButtonHtml;
     showMessage(elements.searchMessage, `No se pudo completar la reserva: ${error.message}`, "error");
   }
 }

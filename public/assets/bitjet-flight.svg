@@ -1,6 +1,6 @@
-<!-- Ilustración vectorial local de un avión sobre nubes, creada para la portada. -->
+<!-- Ilustración vectorial local de un avión azul, creada para la portada. -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 390" role="img" aria-labelledby="title">
-  <title id="title">Avión Bitjet volando sobre nubes</title>
+  <title id="title">Avión Bitjet volando</title>
   <defs>
     <linearGradient id="plane" x1="0" x2="1" y1="0" y2="1">
       <stop offset="0" stop-color="#19c4d2"/>
@@ -12,7 +12,6 @@
     </linearGradient>
   </defs>
   <path d="M24 305c18-28 45-36 72-21 7-33 38-54 70-41 19-45 75-58 110-25 21-27 63-31 89-7 28-23 70-15 86 17 35-5 63 17 68 48 27 5 43 21 51 46H0c3-8 12-14 24-17Z" fill="url(#cloud)" opacity=".92"/>
-  <path d="M119 107c71-23 145-27 221-19" fill="none" stroke="#19c4d2" stroke-linecap="round" stroke-dasharray="2 12" stroke-width="4" opacity=".72"/>
   <circle cx="115" cy="108" r="7" fill="#19c4d2"/>
   <g transform="translate(152 81) rotate(-8 175 70)">
     <path d="M20 74c39-4 80-9 122-15L216 8c9-7 21-8 32-4l-38 51 84-10c13-2 27 2 37 10l-119 34-43 56c-6 8-17 12-27 10l20-60-81 23-26 24-17-4 15-33-36 4-9-11 38-17-21-26c-4-5-3-12 2-17Z" fill="url(#plane)"/>

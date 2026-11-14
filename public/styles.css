@@ -99,11 +99,16 @@ input :invalid{
   border: 0;
   border-radius: 999px;
   font-weight: 700;
-  transition: background 150ms ease, transform 150ms ease;
+  transition: background 150ms ease, transform 150ms ease, box-shadow 150ms ease;
 }
 
 .button:hover {
   transform: translateY(-1px);
+}
+
+.button:disabled {
+  cursor: wait;
+  opacity: 0.8;
 }
 
 /* Distingue la acción principal con el azul de la identidad Bitjet. */
@@ -124,6 +129,30 @@ input :invalid{
 
 .button-quiet:hover {
   background: var(--sky);
+}
+
+.button-quiet.is-active {
+  background: var(--sky);
+  color: var(--blue-dark);
+  box-shadow: inset 0 0 0 1px rgba(23, 104, 229, 0.12);
+}
+
+.button-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Limita el ancho del contenido y deja espacio al pie de página. */
@@ -281,6 +310,14 @@ input::placeholder {
   margin-top: 52px;
 }
 
+.account-summary {
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: white;
+  box-shadow: var(--shadow);
+}
+
 .flight-list,
 .reservation-list,
 .agent-flight-list {
@@ -297,6 +334,14 @@ input::placeholder {
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: white;
+  box-shadow: 0 8px 24px rgba(19, 45, 70, 0.04);
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.flight-card:hover {
+  transform: translateY(-4px) scale(1.01);
+  border-color: rgba(23, 104, 229, 0.35);
+  box-shadow: 0 18px 38px rgba(19, 45, 70, 0.12);
 }
 
 .flight-main {
@@ -389,6 +434,21 @@ input::placeholder {
   color: var(--muted);
   font-size: 0.81rem;
   line-height: 1.5;
+}
+
+.inline-link {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--blue);
+  font: inherit;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.inline-link:hover {
+  color: var(--blue-dark);
 }
 
 /* Presenta cada formulario de cuenta en su propio diálogo modal. */

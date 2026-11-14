@@ -1,0 +1,145 @@
+{
+  "flights": [
+    {
+      "id": "BJ101",
+      "origin": "SDQ",
+      "originName": "Santo Domingo",
+      "destination": "PUJ",
+      "destinationName": "Punta Cana",
+      "date": "2026-12-10",
+      "departure": "09:00",
+      "arrival": "10:00",
+      "price": 4500,
+      "status": "A tiempo",
+      "seats": [
+        "1A",
+        "1B",
+        "2A",
+        "2B",
+        "3A",
+        "3B"
+      ],
+      "occupiedSeats": [
+        "1B"
+      ]
+    },
+    {
+      "id": "BJ202",
+      "origin": "SDQ",
+      "originName": "Santo Domingo",
+      "destination": "STI",
+      "destinationName": "Santiago",
+      "date": "2026-12-12",
+      "departure": "13:30",
+      "arrival": "14:20",
+      "price": 3200,
+      "status": "A tiempo",
+      "seats": [
+        "1A",
+        "1B",
+        "2A",
+        "2B",
+        "3A",
+        "3B"
+      ],
+      "occupiedSeats": []
+    },
+    {
+      "id": "BJ303",
+      "origin": "PUJ",
+      "originName": "Punta Cana",
+      "destination": "SDQ",
+      "destinationName": "Santo Domingo",
+      "date": "2026-12-15",
+      "departure": "17:15",
+      "arrival": "18:10",
+      "price": 4700,
+      "status": "A tiempo",
+      "seats": [
+        "1A",
+        "1B",
+        "2A",
+        "2B",
+        "3A",
+        "3B"
+      ],
+      "occupiedSeats": [
+        "1A"
+      ]
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "name": "Agente Bitjet",
+      "address": "Santo Domingo",
+      "company": "",
+      "rnc": "",
+      "phone": "000-000-0000",
+      "email": "agente@bitjet.demo",
+      "password": "bitjet123",
+      "role": "agent",
+      "miles": 0
+    },
+    {
+      "name": "test2",
+      "address": "test calle test",
+      "phone": "23422342342",
+      "email": "test2@g.com",
+      "password": "12345678",
+      "company": "",
+      "rnc": "",
+      "role": "retail",
+      "miles": 0,
+      "id": 2
+    },
+    {
+      "name": "test3c",
+      "address": "test calle test",
+      "phone": "23423423423423",
+      "email": "test3c@g.com",
+      "password": "12345678",
+      "company": "asdfasdfadf",
+      "rnc": "234dfs4f4",
+      "role": "corporate",
+      "miles": 4700,
+      "id": 3
+    }
+  ],
+  "reservations": [
+    {
+      "userId": 2,
+      "flightId": "BJ303",
+      "flightNumber": "BJ303",
+      "origin": "Punta Cana",
+      "destination": "Santo Domingo",
+      "flightDate": "2026-12-15",
+      "departure": "17:15",
+      "seat": "1B",
+      "price": 4700,
+      "milesUsed": 0,
+      "milesEarned": 0,
+      "status": "Cancelada",
+      "createdAt": "2026-11-13T23:57:48.661Z",
+      "id": 1,
+      "refundAmount": 3760,
+      "cancelledAt": "2026-11-13T23:58:08.976Z"
+    },
+    {
+      "userId": 3,
+      "flightId": "BJ303",
+      "flightNumber": "BJ303",
+      "origin": "Punta Cana",
+      "destination": "Santo Domingo",
+      "flightDate": "2026-12-15",
+      "departure": "17:15",
+      "seat": "1A",
+      "price": 4700,
+      "milesUsed": 0,
+      "milesEarned": 4700,
+      "status": "Confirmada",
+      "createdAt": "2026-11-13T23:58:30.753Z",
+      "id": 2
+    }
+  ]
+}

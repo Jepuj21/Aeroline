@@ -1,0 +1,511 @@
+﻿INF 3290-05 - Análisis y Diseño de Sistema | Análisis para el desarrollo
+UNIVERSIDAD AUTÓNOMA DE SANTO DOMINGO (UASD)
+FACULTAD DE CIENCIAS | ESCUELA DE INFORMÁTICA
+INF 3290-05 - Análisis y Diseño de Sistema
+ANÁLISIS DE SOFTWARE: Sistema web para reservación de vuelo en línea
+Análisis crítico sobre el desarrollo de software:
+con el enfoque de la metodología análisis y diseño orientado a objeto (adoo) implementando la metodología de modelado uml
+Equipo:
+	Bryan Rodriguez
+Robert Almonte
+Lendry Barrientos
+Jesus Pujols Luciano
+	Matriculas
+	100523553
+100604582
+100658374
+100625059
+	Asignatura: 
+	Análisis y diseño de sistemas
+	Sección:
+	INF 3290 - 05
+	Docente:
+	Amancio Lorenzo Lorenzo
+	Fecha de Entrega:
+	9 octubre de 2026
+	________________
+
+
+INTRODUCCIÓN
+________________
+Introducción, punto de partida.
+Situación de la empresa
+Sistema web para reservación de vuelo en línea
+Un dueño de una pequeña aerolínea regional está interesado en ofrecer sus servicios a
+los clientes a través de un sistema web, para que estos consulten información de vuelo y
+hagan sus reservaciones en línea.
+Después de entrevistar a los gerentes del negocio, los representantes o agentes de
+boletos y los usuarios finales del sistema, se procede a documentar claramente los
+procesos del negocio y establecer el alcance del sistema. Este proceso da como resultado
+un documento formal donde se detallan los requerimientos funcionales del sistema. Ese
+documento es un SRS, Especificación de Requerimiento de Software
+(SRS por sus siglas en
+Especificación de Requerimiento de Software ([SRS] Software Requirement Specification)
+1. -Los usuarios no registrados pueden entrar al sitio web de la aerolínea para ver las
+informaciones de vuelo pero no pueden hacer reservaciones.
+2. -Los nuevos clientes interesados en reservar vuelo pueden completar un formulario
+de registro con los siguientes datos: nombre, dirección, nombre de la compañía,
+número de teléfono, dirección de correo.
+3. -El cliente es clasificado como corporativo o cliente minorista.
+4. -El cliente puede hacer búsqueda de vuelos basado en el destino y hora de partida.
+5. -El cliente puede reservar vuelo indicando el número de vuelo y número de asiento
+solicitado.
+6. -El sistema envía una confirmación al cliente vía correo electrónico cuando el vuelo
+es reservado.
+7. -Los clientes corporativos reciben millas de vuelo cuando sus empleadores
+reservan vuelo.
+8. -Las millas acumuladas por vuelos frecuentes son usadas para hacer descuentos a
+futuras solicitudes.
+9. -La reservación puede ser cancelada después de una semana con una devolución
+del 80%.
+10.- Los representantes o agentes de boletos pueden ver y actualizar la información de vuelo.
+
+
+PASO 3.1: Definición de Actores del Sistema
+
+
+* Usuario No Registrado (Visitante): Persona que accede al sitio web únicamente para consultar la disponibilidad e información de los vuelos, sin privilegios para realizar reservaciones.
+
+
+* Cliente Registrado: Usuario autenticado en el sistema que puede buscar vuelos, efectuar reservaciones (especificando número de vuelo y asiento), acumular/redimir millas y gestionar cancelaciones según las políticas de la empresa.
+
+
+* Agente de Boletos: Personal interno de la aerolínea con permisos para visualizar, gestionar y actualizar la información de la oferta de vuelos en el sistema.
+
+
+* Gestor de mails: Sistema externo que envía los mail del sistema de reservas.
+
+
+________________
+
+
+PASO 3.2: Tabla de Casos de Uso
+No.
+	Caso de uso
+	Actores involucrados
+	Descripción
+	Precondición
+	Postcondición
+	1
+	Ver información de vuelo
+	Usuario no registrado y Cliente registrado
+	Permite a los usuarios consultar de forma pública la oferta general de vuelos publicada por la aerolínea, visualizando detalles clave como origen, destino, fechas, horarios de salida/llegada, número de vuelo y disponibilidad de asientos en tiempo real, sin requerir autenticación en el portal.
+	Ninguna
+	Información de vuelos mostrada en pantalla.
+	2
+	Registrar cliente
+	Usuario no registrado y gestor de mails
+	Permite a un nuevo usuario crear una cuenta en la plataforma completando un formulario con sus datos personales (nombre, dirección, teléfono, correo) e información corporativa si aplica. El sistema valida los campos obligatorios, verifica que el correo no esté registrado previamente y clasifica la cuenta como cliente minorista o corporativo para asignarle sus correspondientes beneficios.
+	No poseer una cuenta registrada previamente.
+	Cuenta de usuario creada, registrada en la base de datos y se le enviará automáticamente un correo vía el gestor.
+	3
+	Iniciar sesión
+	Cliente registrado y
+ Agente de boletos
+	Permite a los usuarios registrados y personal autorizado autenticarse en el sistema ingresando su identificador (correo o usuario) y contraseña. El sistema verifica la validez de las credenciales, activa la sesión del usuario con sus respectivos permisos y habilita el acceso a las funciones restringidas de reservación y gestión.
+	Estar registrado previamente en el sistema.
+	Sesión de usuario iniciada correctamente.
+	4
+	Buscar vuelos
+	Cliente registrado
+	Permite a los clientes autenticados ejecutar búsquedas avanzadas de itinerarios aplicando filtros específicos como origen, destino, fecha y hora de partida. El sistema procesa la consulta contra la base de datos y presenta una lista ordenada con las mejores alternativas de vuelos disponibles que coinciden con los criterios ingresados.
+	Acceso al portal o sesión iniciada.
+	Listado de vuelos filtrados mostrado en pantalla.
+	5
+	Reservar vuelo
+	Cliente registrado y
+Gestor de mails.
+	Permite a un cliente autenticado seleccionar un vuelo específico y el número de asiento deseado, ingresar los datos del pasajero y confirmar la transacción. Durante el proceso, el sistema evalúa la disponibilidad del asiento, calcula la tarifa aplicable (considerando acumulación o redención de millas para clientes corporativos) y genera la reserva confirmada en la base de datos, notificando la confirmación vía correo electrónico.
+	Contar con vuelos disponibles y haber iniciado sesión.
+	Reserva registrada exitosamente y se le enviará automáticamente un correo vía el gestor.
+	6
+	Cancelar reserva
+	Cliente registrado y gestor de mails
+	Permite a un cliente gestionar la anulación de una reservación previa indicando el código de reserva. El sistema valida que la reserva esté activa y evalúa el tiempo restante respecto a la fecha del vuelo: si se realiza con al menos una semana de antelación, aplica la directriz de reembolso del 80% e inicia el proceso de devolución; de lo contrario, rechaza el reembolso. Finalmente, libera el asiento en el sistema.
+	Poseer una reserva activa confirmada.
+	Reserva cancelada y estado actualizado en el sistema y se le enviará automáticamente un correo vía el gestor.
+	7
+	Gestionar vuelos
+	Agente de boletos
+	Permite al personal administrativo de la aerolínea acceder al módulo de administración para consultar, agregar, modificar o actualizar el itinerario y estado de los vuelos registrados (horarios, asignación de aeronaves, precios, retrasos o cancelaciones), asegurando la consistencia de la oferta mostrada a los clientes.
+	Contar con credenciales y permisos de agente de boletos.
+	Información de vuelos actualizada en el sistema.
+	8
+	Envío de notificación por correo
+	Gestor de mails
+	Sistema que permite automáticamente enviar un correo luego de realizar operación que necesitan notificación, tales como, registro, reservas o cancelaciones  
+	Realizar algunos de los siguientes casos, registró, reservas o cancelaciones
+	Envío de correo automático al remitente que realice la operación, tomar los datos del procedimiento
+	
+
+
+
+PASO 3.3: Análisis de Procesos Alternativos y/o Excepciones
+No.
+	Caso de uso que corresponde
+	Tipo
+	Evento / Condición de excepción
+	Descripción del flujo alternativo
+	01
+	03: Iniciar sesión
+	Flujo alternativo
+	Credenciales de acceso incorrectas
+	El sistema verifica que el usuario o contraseña no coinciden con la base de datos, muestra un mensaje de error ("Usuario o contraseña incorrectos") y solicita nuevamente los datos.
+	02
+	04: Buscar vuelos
+	Flujo alternativo
+	Sin vuelos disponibles para el criterio
+	Si no se encuentran vuelos coincidentes con el origen, destino o fecha seleccionada, el sistema muestra una notificación informando la no disponibilidad y sugiere buscar en fechas cercanas.
+	03
+	05: Reservar 
+vuelo
+	Flujo alternativo
+	Aplicar descuento por millas corporativas
+ 
+
+
+
+
+
+
+Asiento seleccionado  previamente ocupado
+ 
+ 
+
+
+
+
+
+
+
+	Durante el proceso de reserva, si el cliente posee categoría corporativa y cuenta con millas acumuladas, el sistema le permite redimirlas para obtener un descuento en la tarifa del billete.
+ 
+
+
+
+
+Si en el tiempo de selección el asiento fue tomado por otro usuario, el sistema notifica el conflicto, actualiza el mapa de asientos y solicita al cliente elegir una posición distinta.
+	05
+	02: Registrar cliente
+	Flujo alternativo
+	Correo electrónico ya registrado / Campos vacíos
+	Si el correo ingresado ya existe en el sistema o falta algún campo obligatorio, el sistema resalta los campos con error y solicita corregirlos antes de proceder.
+	06
+	06: Cancelar reserva
+	Flujo alternativo
+	Procesar cancelación con devolución del 80%
+ 
+Cancelación fuera del plazo permitido (menos de 1 semana)
+	Si la solicitud de cancelación se realiza con al menos una semana de antelación respecto a la fecha del vuelo, el sistema calcula de forma automática el reajuste y procesa el reembolso del 80%.
+ 
+ 
+Si el usuario intenta cancelar una reserva con menos de una semana de anticipación, el sistema rechaza la solicitud de devolución automática y notifica que la reserva es no reembolsable según las políticas.
+	________________
+PASO 4: Diagrama UML en Lucidchart 
+  
+
+Paso 5. Escenarios a partir de los casos de uso.
+Escenario para el caso de uso inicio de sesión.
+Escenarios principales
+1. El usuario o agente de boleta pone sus credenciales
+2. La credenciales son verificadas correctamente 
+3. El sistema determina qué perfil darle al usuario según la credencial
+4. Entrar a todo lo que los permisos le permiten según el usuario.
+
+Escenarios alternativo
+   1. El usuario pone sus credenciales.
+   2. Las credenciales son verificadas de forma incorrecta.
+   3. El sistema lanza un mensaje y obliga a poner la contraseña o usuario otra vez.
+Escenario para el caso de uso ver información de vuelo .
+Escenarios principales
+   1. El usuario sin registrar o usuario registrado entra al apartado de información de vuelo
+   2. Puede ver el estado de los vuelos o asientos disponibles.
+Escenario para el caso de uso registrar clientes.
+Escenarios principales
+   1. El usuario sin registrar llena todos los campos del formulario de registro, nombre completo, dirección, nombre de la compañía(Si aplica),RNC(Si aplica),  número de teléfono, dirección de correo.
+   2. Acepta las condiciones.
+   3. Y aplica los cambios dándole al botón de registrar.
+   4. El sistema decide qué rol asignar al usuario si lleno o no ‘ nombre de la compañía’ y el ‘RNC’
+   5. El gestor de mails le envía un correo con la información del registro.
+
+
+
+Escenarios alternativo
+   1. El usuario sin registrar llena todos los campos del formulario de registro, nombre completo, dirección, nombre de la compañía(Si aplica),RNC(Si aplica),  número de teléfono, dirección de correo.
+   2. Algunos de los campos no cumplen con lo que corresponde.
+   3. Se le envía un mensaje y se señala el campo incorrecto.
+Escenario para el caso de uso buscar vuelos.
+Escenarios principales
+   1. El cliente registrado en buscar vuelo pone el destino y hora de partida.
+   2. Saldrán los vuelos enlistados que coincidan en pantalla.
+Escenarios alternativo
+   1. El cliente registrado en buscar vuelo pone el destino y hora de partida.
+   2. No coincide con ningún vuelo con estas opciones de destino y hora de partida.
+Escenario para el caso de uso, reservar vuelo.
+Escenarios principales 
+   1. El cliente registrado selecciona un vuelo disponible en la lista de vuelos.
+   2. El cliente selecciona un asiento disponible
+   3. La reserva es completada con éxito
+   4. El gestor de mails le envía un correo con la información de su reserva 
+Escenarios alternativo cliente corporativo
+   5. El cliente corporativo selecciona un vuelo disponible en la lista de vuelos.
+   6. El cliente selecciona un asiento/s disponible/s
+   7. El cliente selecciona el número de millas a usar para reducir el costo de su vuelo 
+   8. La reserva es completada con éxito
+   9. El sistema calcula y suma milla por la reserva realizada.
+   10. El gestor de mails le envía un correo con la información de su reserva 
+Escenarios alternativo asiento ocupado
+   1. El cliente registrado selecciona un vuelo disponible en la lista de vuelos.
+   2. El cliente selecciona un asiento disponible
+   3. La reserva tiene un error por asiento ocupado durante el proceso. 
+   4. La reserva no se procesa y obliga a seleccionar otro asiento.
+Escenario para el caso de uso, cancelar vuelos.
+Escenarios principales
+   1. El cliente selecciona el vuelo que quiere cancelar de su lista de reservas.
+   2. El cliente selecciona cancelar reserva
+   3. El cliente cancela el vuelo 
+   4. El cliente recibe un 80% por ciento de reembolso por cancelación anticipada.
+   5. El gestor de mail le envía un correo con la información de la cancelación
+Escenarios alternativo
+   5. El cliente selecciona el vuelo que quiere cancelar de su lista de reservas.
+   6. El cliente selecciona cancelar reserva
+   7. El cliente cancela el vuelo 
+   8. El cliente no recibe reembolso por cancelar con menos de 7 días antes del vuelo.
+   9. El gestor de mail le envía un correo con la información de la cancelación
+Escenario para el caso de uso, gestionar vuelo.
+Escenarios principales
+   1. El agente de boletos ver los vuelos disponibles.
+   2. El agente selecciona el vuelo que quiere actualizar
+   3. El agente cambia el estado del vuelo a retrasado, adelantado o a tiempo.
+   4. El agente cambia el piloto
+   5. El agente cambia la hora.
+
+
+
+
+
+
+
+
+
+
+
+
+Paso 6. Diagramas de Secuencia UML 
+CU 1-Inicio de Sesión
+  
+
+CU 2-Ver Información de Vuelo
+  
+
+
+
+CU 3 - Registrar Clientes
+  
+
+CU 4 - Buscar Vuelos  
+CU 5 - Reservar Vuelo
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+CU 6 - Cancelar Reserva
+  
+
+CU 7 - Gestionar Vuelo
+  
+Paso 7: Identificar las clases y sus miembros (atributos y métodos).
+7.1. Identificar las clases
+   1. Usuario - Representación abstracta de todo los que interactúan con el sistema
+   2. Cliente - Es un hijo que hereda todo del usuario y representa a dos tipos distintos.
+   3. AgenteVuelo - Agente de vuelo que hereda de usuario que y maneja el sistema
+   4. Vuelo - clase que representa a la intensidad vuelo
+   5. Reserva -  Maneja la conexión sobre la acción de hacer reserva para registrar. 
+   6. Asiento -  clase que representa a la intensidad asiento
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+7.2  Identificar los miembros de la clase.
+NO
+	CLASE
+	METODOS
+	ATRIBUTOS
+	TIPO DE DATOS
+	1
+	Usuario
+	Iniciar sesión, 
+Cerrar sesión, 
+Actualizar datos
+	nombreUsuario,
+contraseña,
+nombre
+correo
+	String
+String
+String
+String
+	2
+	Cliente
+	Registrarse, 
+Consultar vuelos, 
+Realizar reserva, 
+Cancelar reserva
+	idCliente,
+ documento,
+ teléfono,
+ dirección
+esCorporativo
+	Int
+String
+Int
+String
+Booleano
+	3
+	Agente de vuelo
+	Registrar vuelo, 
+Modificar vuelo, 
+Eliminar vuelo, 
+Consultar reservas
+	idAgente,
+codigoEmpleado 
+
+
+	Int
+String
+
+
+	
+
+4
+	Vuelo
+	Mostrar información, 
+Consultar disponibilidad,
+Actualizar vuelo
+	idVuelo, 
+origen, 
+destino, 
+Fecha,
+hora, 
+precio
+	Int
+String
+String
+Date
+Date
+Double
+	5
+	Reserva
+	Crear reserva, 
+Confirmar reserva, 
+Cancelar reserva, 
+Consultar reserva
+ 
+	idReserva,
+fechaReserva,
+Estado,
+precioTotal
+	Int
+Date
+Booleano
+Double
+	6
+	Asientos
+	Consultar disponibilidad, 
+Seleccionar asiento, 
+Reservar asiento, 
+Liberar asiento   
+	idAsiento, 
+número, 
+clase, 
+estado
+	Int
+String
+String
+Boolean
+	7.3. Luego de haber creado la tabla anterior siguiendo las instrucciones dadas, representar la notación UML de cada una de las clases.
+  
+________________
+
+Paso 8: Diagrama de clase. 
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+CONCLUSIÓN
+
+
+
+
+
+
+
+
+BIBLIOGRAFÍA
+
+
+
+
+Análisis para el desarrollo - Proyecto final | Página

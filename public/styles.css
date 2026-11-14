@@ -1,0 +1,610 @@
+/* Define la paleta Bitjet y los valores visuales compartidos por la página. */
+:root {
+  color-scheme: light;
+  --ink: #132d46;
+  --muted: #64788a;
+  --blue: #1768e5;
+  --blue-dark: #0e4fb7;
+  --cyan: #19c4d2;
+  --sky: #eaf5ff;
+  --surface: #ffffff;
+  --background: #f5f8fc;
+  --line: #dce6ef;
+  --success: #147d63;
+  --danger: #b53b44;
+  --radius: 18px;
+  --shadow: 0 16px 40px rgba(19, 45, 70, 0.08);
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+}
+
+/* Ajusta el modelo de caja para que las dimensiones sean predecibles. */
+* {
+  box-sizing: border-box;
+}
+
+/* Establece el fondo, color de texto y espaciado general de la página. */
+body {
+  min-width: 320px;
+  margin: 0;
+  background: var(--background);
+  color: var(--ink);
+}
+
+/* Da un estilo común a los enlaces, botones y controles de formulario. */
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+a:focus-visible {
+  outline: 3px solid rgba(25, 196, 210, 0.65);
+  outline-offset: 3px;
+}
+
+input :invalid{
+    outline: 3px solid rgba(245, 9, 9, 0.65);
+}
+
+
+/* Alinea el encabezado y mantiene la marca visible al desplazarse. */
+.site-header {
+  position: sticky;
+  z-index: 5;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 76px;
+  padding: 12px max(5vw, 22px);
+  background: rgba(255, 255, 255, 0.94);
+  border-bottom: 1px solid rgba(220, 230, 239, 0.85);
+  backdrop-filter: blur(12px);
+}
+
+/* Combina el símbolo original de Bitjet con el nombre de la marca. */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--ink);
+  font-size: 1.65rem;
+  font-weight: 800;
+  letter-spacing: -0.07em;
+  text-decoration: none;
+}
+
+.brand img {
+  display: block;
+}
+
+/* Separa las acciones de cuenta del borde del encabezado. */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Aplica la forma base a los botones de la interfaz. */
+.button {
+  min-height: 43px;
+  padding: 10px 17px;
+  border: 0;
+  border-radius: 999px;
+  font-weight: 700;
+  transition: background 150ms ease, transform 150ms ease;
+}
+
+.button:hover {
+  transform: translateY(-1px);
+}
+
+/* Distingue la acción principal con el azul de la identidad Bitjet. */
+.button-primary {
+  background: var(--blue);
+  color: white;
+}
+
+.button-primary:hover {
+  background: var(--blue-dark);
+}
+
+/* Presenta las acciones secundarias sin competir con el botón principal. */
+.button-quiet {
+  background: transparent;
+  color: var(--ink);
+}
+
+.button-quiet:hover {
+  background: var(--sky);
+}
+
+/* Limita el ancho del contenido y deja espacio al pie de página. */
+main {
+  width: min(1120px, calc(100% - 40px));
+  min-height: calc(100vh - 180px);
+  margin: 0 auto;
+  padding-bottom: 70px;
+}
+
+/* Construye el bloque visual principal con la ilustración propia de Bitjet. */
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 295px;
+  margin: 34px 0 28px;
+  overflow: hidden;
+  padding: 42px clamp(24px, 6vw, 72px);
+  border-radius: 28px;
+  background: linear-gradient(112deg, #eaf5ff 0%, #d8f5fb 100%);
+}
+
+.hero-copy {
+  position: relative;
+  z-index: 1;
+  max-width: 540px;
+}
+
+.hero h1 {
+  max-width: 500px;
+  margin: 8px 0 12px;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  line-height: 0.98;
+  letter-spacing: -0.065em;
+}
+
+.hero-copy > p:last-child {
+  max-width: 390px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 1.08rem;
+  line-height: 1.6;
+}
+
+.hero-art {
+  position: absolute;
+  right: -14px;
+  bottom: -55px;
+  width: min(52%, 530px);
+  max-height: 340px;
+  object-fit: contain;
+}
+
+/* Presenta secciones y formularios como tarjetas con bordes suaves. */
+.panel {
+  padding: clamp(20px, 4vw, 34px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.search-panel {
+  position: relative;
+  z-index: 2;
+}
+
+/* Alinea encabezados y etiquetas de cada sección. */
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 23px;
+}
+
+.section-heading h2 {
+  margin: 4px 0 0;
+  font-size: clamp(1.45rem, 3vw, 2rem);
+  letter-spacing: -0.04em;
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--blue);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.public-note {
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: var(--sky);
+  color: var(--blue-dark);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+/* Acomoda filtros y campos sin depender de una biblioteca externa. */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 15px;
+}
+
+.form-grid label,
+.form-stack label {
+  display: grid;
+  gap: 8px;
+  color: var(--ink);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+input,
+select {
+  width: 100%;
+  min-height: 45px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: white;
+  color: var(--ink);
+}
+
+input::placeholder {
+  color: #8a9baa;
+}
+
+.search-submit {
+  align-self: end;
+}
+
+/* Reserva el espacio del mensaje para errores o confirmaciones del formulario. */
+.form-message {
+  min-height: 1.2em;
+  margin: 9px 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.form-message[data-kind="error"] {
+  color: var(--danger);
+}
+
+.form-message[data-kind="success"] {
+  color: var(--success);
+}
+
+/* Da separación a las listas de vuelos, reservas y herramientas del agente. */
+.content-section {
+  margin-top: 52px;
+}
+
+.flight-list,
+.reservation-list,
+.agent-flight-list {
+  display: grid;
+  gap: 14px;
+}
+
+/* Organiza la información de cada vuelo y deja la reserva en una columna aparte. */
+.flight-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 0.8fr);
+  gap: 22px;
+  padding: 23px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: white;
+}
+
+.flight-main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+}
+
+.flight-number {
+  color: var(--blue);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.route {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 13px;
+}
+
+.route-point strong {
+  display: block;
+  font-size: 1.16rem;
+}
+
+.route-point span,
+.flight-meta,
+.flight-status,
+.reservation-detail {
+  color: var(--muted);
+  font-size: 0.87rem;
+}
+
+.route-arrow {
+  color: var(--cyan);
+  font-size: 1.35rem;
+  font-weight: 800;
+}
+
+.flight-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+}
+
+.flight-status {
+  width: fit-content;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #e8f7f2;
+  color: var(--success);
+  font-weight: 700;
+}
+
+.flight-status[data-status="Cancelado"] {
+  background: #fff0f0;
+  color: var(--danger);
+}
+
+.booking-box {
+  display: grid;
+  align-content: center;
+  gap: 10px;
+  padding: 16px;
+  border-radius: 14px;
+  background: #f5f9fd;
+}
+
+.booking-box label {
+  display: grid;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.fare {
+  color: var(--ink);
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.booking-hint,
+.field-note,
+.demo-hint {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.81rem;
+  line-height: 1.5;
+}
+
+/* Presenta cada formulario de cuenta en su propio diálogo modal. */
+.account-dialog {
+  width: min(500px, calc(100% - 28px));
+  max-height: min(90vh, 850px);
+  margin: auto;
+  padding: 0;
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 24px 80px rgba(19, 45, 70, 0.22);
+}
+
+.account-dialog::backdrop {
+  background: rgba(15, 35, 54, 0.58);
+  backdrop-filter: blur(3px);
+}
+
+.dialog-panel {
+  padding: clamp(22px, 5vw, 34px);
+}
+
+.dialog-panel .section-heading {
+  margin-bottom: 20px;
+}
+
+.dialog-panel .form-stack {
+  padding: 0;
+  border: 0;
+}
+
+.conditional-fields {
+  display: grid;
+  gap: 13px;
+}
+
+.form-stack {
+  display: grid;
+  align-content: start;
+  gap: 13px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+
+.form-stack h3,
+.agent-new-flight h3 {
+  grid-column: 1 / -1;
+  margin: 0 0 4px;
+}
+
+.icon-button {
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: white;
+  color: var(--ink);
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+/* Destaca el saldo de millas mostrado a clientes corporativos. */
+.miles-balance {
+  margin: 0;
+  color: var(--blue-dark);
+  font-weight: 800;
+}
+
+.reservation-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: white;
+}
+
+.reservation-card h3 {
+  margin: 4px 0 8px;
+}
+
+.reservation-detail {
+  margin: 3px 0;
+}
+
+/* Presenta el formulario de alta de vuelos y los formularios de actualización. */
+.agent-section {
+  padding-top: 12px;
+}
+
+.agent-new-flight {
+  margin-bottom: 18px;
+}
+
+.agent-new-flight h3 {
+  grid-column: 1 / -1;
+}
+
+.wide-field {
+  grid-column: 1 / -1;
+}
+
+.agent-flight-card {
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: white;
+}
+
+.agent-flight-card h3 {
+  margin-top: 0;
+}
+
+.agent-flight-form {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: end;
+  gap: 12px;
+}
+
+/* Mantiene los controles interactivos en una sola fila cuando hay espacio. */
+[hidden] {
+  display: none !important;
+}
+
+/* Presenta el pie de página con una versión compacta de la marca. */
+.site-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px max(5vw, 22px);
+  border-top: 1px solid var(--line);
+  background: white;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.brand-footer {
+  font-size: 1.2rem;
+}
+
+/* Adapta los formularios y tarjetas a pantallas medianas. */
+@media (max-width: 820px) {
+  .search-grid,
+  .agent-new-flight,
+  .agent-flight-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .flight-card {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-art {
+    right: -60px;
+    width: 55%;
+    opacity: 0.72;
+  }
+}
+
+/* Apila el contenido para conservar legibilidad en móviles. */
+@media (max-width: 560px) {
+  .site-header {
+    min-height: 66px;
+    padding-inline: 16px;
+  }
+
+  .header-actions {
+    gap: 2px;
+  }
+
+  .header-actions .button {
+    min-height: 39px;
+    padding: 8px 10px;
+    font-size: 0.8rem;
+  }
+
+  main {
+    width: min(100% - 28px, 1120px);
+  }
+
+  .hero {
+    min-height: 250px;
+    margin-top: 20px;
+    padding: 28px 22px;
+  }
+
+  .hero-art {
+    right: -95px;
+    bottom: -48px;
+    width: 70%;
+    opacity: 0.45;
+  }
+
+  .search-grid,
+  .agent-new-flight,
+  .agent-flight-form {
+    grid-template-columns: 1fr;
+  }
+
+  .search-submit,
+  .wide-field,
+  .agent-new-flight h3 {
+    grid-column: auto;
+  }
+
+  .reservation-card,
+  .site-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

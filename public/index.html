@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <!-- Define la codificación y la adaptación de la página a pantallas móviles. -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Describe la página y establece el nombre de la aerolínea. -->
+  <meta name="description" content="Consulta y reserva vuelos con Bitjet.">
+  <title>Bitjet | Vuelos</title>
+  <!-- Carga los estilos locales de la aplicación. -->
+  <link rel="stylesheet" href="/styles.css">
+  <!-- Carga la identidad visual creada para Bitjet. -->
+  <link rel="icon" href="/assets/bitjet-logo.svg" type="image/svg+xml">
+  <!-- Ejecuta la lógica de la página después de analizar el HTML. -->
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <!-- Presenta la marca y las acciones principales de la cuenta. -->
+  <header class="site-header">
+    <a class="brand" href="#inicio" aria-label="Bitjet, inicio">
+      <img src="/assets/bitjet-logo.svg" alt="" width="42" height="42">
+      <span>bitjet</span>
+    </a>
+    <nav class="header-actions" aria-label="Navegación principal">
+      <button class="button button-quiet" id="account-toggle" type="button">Iniciar sesión</button>
+      <button class="button button-primary" id="register-toggle" type="button">Crear cuenta</button>
+      <button class="button button-quiet" id="logout-button" type="button" hidden>Cerrar sesión</button>
+    </nav>
+  </header>
+
+  <!-- Contiene el buscador y la imagen ilustrada de Bitjet. -->
+  <main id="inicio">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Tu próximo destino, más cerca</p>
+        <h1>Vuela a tu manera.</h1>
+        <p>Encuentra tu vuelo y prepara tu próximo viaje con Bitjet.</p>
+      </div>
+      <img class="hero-art" src="/assets/bitjet-flight.svg" alt="Ilustración de un avión sobre las nubes">
+    </section>
+
+    <!-- Permite consultar vuelos sin iniciar sesión. -->
+    <section class="panel search-panel" aria-labelledby="search-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Explora la ruta</p>
+          <h2 id="search-title">Busca tu vuelo</h2>
+        </div>
+        <span class="public-note">Consulta pública</span>
+      </div>
+      <form id="search-form" class="form-grid search-grid">
+        <label>
+          Origen
+          <input name="origin" type="search" placeholder="Ej. Santo Domingo">
+        </label>
+        <label>
+          Destino
+          <input name="destination" type="search" placeholder="Ej. Punta Cana">
+        </label>
+        <label>
+          Fecha
+          <input name="date" type="date">
+        </label>
+        <label>
+          Sale después de
+          <input name="departureAfter" type="time">
+        </label>
+        <button class="button button-primary search-submit" type="submit">Buscar vuelos</button>
+      </form>
+      <p class="form-message" id="search-message" role="status"></p>
+    </section>
+
+    <!-- Muestra los vuelos encontrados a visitantes y clientes. -->
+    <section class="content-section" aria-labelledby="flights-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Rutas disponibles</p>
+          <h2 id="flights-title">Vuelos</h2>
+        </div>
+      </div>
+      <div id="flight-results" class="flight-list" aria-live="polite"></div>
+    </section>
+
+    <!-- Muestra el inicio de sesión en un diálogo independiente. -->
+    <dialog class="account-dialog" id="login-dialog" aria-labelledby="login-title">
+      <div class="dialog-panel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Tu cuenta Bitjet</p>
+            <h2 id="login-title">Iniciar sesión</h2>
+          </div>
+          <button class="icon-button" id="login-close" type="button" aria-label="Cerrar inicio de sesión">×</button>
+        </div>
+        <form id="login-form" class="form-stack">
+          <label>Correo electrónico<input name="email" type="email" autocomplete="email" required></label>
+          <label>Contraseña<input name="password" type="password" autocomplete="current-password" required></label>
+          <button class="button button-primary" type="submit">Entrar</button>
+          <p class="form-message" id="login-message" role="status"></p>
+          <!-- Esta cuenta de demostración permite probar la gestión de vuelos del agente. -->
+          <p class="demo-hint">Agente de demostración: agente@bitjet.demo / bitjet123</p>
+          <p class="demo-hint">Minorista: test2@g.com / 12345678</p>
+          <p class="demo-hint">Corporativo: test3c@g.com / 12345678</p>
+        </form>
+      </div>
+    </dialog>
+
+    <!-- Muestra el registro en un diálogo independiente. -->
+    <dialog class="account-dialog" id="register-dialog" aria-labelledby="register-title">
+      <div class="dialog-panel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Únete a Bitjet</p>
+            <h2 id="register-title">Crear cuenta</h2>
+          </div>
+          <button class="icon-button" id="register-close" type="button" aria-label="Cerrar registro">×</button>
+        </div>
+        <form id="register-form" class="form-stack">
+          <label>Nombre completo<input name="name" autocomplete="name" required></label>
+          <label>Dirección<input name="address" autocomplete="street-address" required></label>
+          <label>Teléfono<input name="phone" type="tel" autocomplete="tel" required></label>
+          <label>Correo electrónico<input name="email" type="email" autocomplete="email" required></label>
+          <label>Contraseña<input name="password" type="password" autocomplete="new-password" minlength="6" required></label>
+          <label>Tipo de cuenta
+            <select id="account-type" name="accountType" required>
+              <option value="retail">Cuenta minorista</option>
+              <option value="corporate">Cuenta corporativa</option>
+            </select>
+          </label>
+          <div class="conditional-fields" id="corporate-fields" hidden>
+            <label>Compañía<input name="company" autocomplete="organization"></label>
+            <label>RNC<input name="rnc" inputmode="numeric"></label>
+          </div>
+          <button class="button button-primary" type="submit">Registrarme</button>
+          <p class="form-message" id="register-message" role="status"></p>
+        </form>
+      </div>
+    </dialog>
+
+    <!-- Presenta el perfil y las reservas de la persona autenticada. -->
+    <section class="content-section account-summary" id="profile-section" aria-labelledby="profile-title" hidden>
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Área personal</p>
+          <h2 id="profile-title">Mis reservas</h2>
+        </div>
+        <p class="miles-balance" id="miles-balance"></p>
+      </div>
+      <div id="reservation-list" class="reservation-list"></div>
+    </section>
+
+    <!-- Permite al agente añadir vuelos y actualizar los vuelos existentes. -->
+    <section class="content-section agent-section" id="agent-section" aria-labelledby="agent-title" hidden>
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Herramientas internas</p>
+          <h2 id="agent-title">Gestión de vuelos</h2>
+        </div>
+      </div>
+      <form id="new-flight-form" class="panel form-grid agent-new-flight">
+        <h3>Agregar vuelo</h3>
+        <label>Número de vuelo<input name="flightNumber" placeholder="BJ201" required></label>
+        <label>Origen<input name="originName" required></label>
+        <label>Código de origen<input name="origin" placeholder="SDQ" required></label>
+        <label>Destino<input name="destinationName" required></label>
+        <label>Código de destino<input name="destination" placeholder="PUJ" required></label>
+        <label>Fecha<input name="date" type="date" required></label>
+        <label>Salida<input name="departure" type="time" required></label>
+        <label>Llegada<input name="arrival" type="time" required></label>
+        <label>Precio (DOP)<input name="price" type="number" min="1" step="1" required></label>
+        <label class="wide-field">Asientos separados por coma<input name="seats" placeholder="1A, 1B, 2A, 2B" required></label>
+        <button class="button button-primary" type="submit">Agregar vuelo</button>
+        <p class="form-message wide-field" id="agent-message" role="status"></p>
+      </form>
+      <div id="agent-flight-list" class="agent-flight-list"></div>
+    </section>
+  </main>
+
+  <!-- Resume la marca y aclara que esta versión trabaja con datos de demostración locales. -->
+  <footer class="site-footer">
+    <a class="brand brand-footer" href="#inicio">
+      <img src="/assets/bitjet-logo.svg" alt="" width="30" height="30">
+      <span>bitjet</span>
+    </a>
+    <p>Vuelos y reservas de demostración gestionados con datos locales.</p>
+  </footer>
+</body>
+</html>

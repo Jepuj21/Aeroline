@@ -1,0 +1,12 @@
+{
+  "name": "bitjet",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Prototipo web local de reservación de vuelos Bitjet",
+  "scripts": {
+    "start": "json-server --watch db.json --port 3000 --static ./public"
+  },
+  "devDependencies": {
+    "json-server": "0.17.4"
+  }
+}

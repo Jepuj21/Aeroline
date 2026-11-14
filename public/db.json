@@ -1,0 +1,61 @@
+{
+  "flights": [
+    {
+      "id": "BJ101",
+      "origin": "SDQ",
+      "originName": "Santo Domingo",
+      "destination": "PUJ",
+      "destinationName": "Punta Cana",
+      "date": "2026-12-10",
+      "departure": "09:00",
+      "arrival": "10:00",
+      "price": 4500,
+      "status": "A tiempo",
+      "seats": ["1A", "1B", "2A", "2B", "3A", "3B"],
+      "occupiedSeats": []
+    },
+    {
+      "id": "BJ202",
+      "origin": "SDQ",
+      "originName": "Santo Domingo",
+      "destination": "STI",
+      "destinationName": "Santiago",
+      "date": "2026-12-12",
+      "departure": "13:30",
+      "arrival": "14:20",
+      "price": 3200,
+      "status": "A tiempo",
+      "seats": ["1A", "1B", "2A", "2B", "3A", "3B"],
+      "occupiedSeats": []
+    },
+    {
+      "id": "BJ303",
+      "origin": "PUJ",
+      "originName": "Punta Cana",
+      "destination": "SDQ",
+      "destinationName": "Santo Domingo",
+      "date": "2026-12-15",
+      "departure": "17:15",
+      "arrival": "18:10",
+      "price": 4700,
+      "status": "A tiempo",
+      "seats": ["1A", "1B", "2A", "2B", "3A", "3B"],
+      "occupiedSeats": []
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "name": "Agente Bitjet",
+      "address": "Santo Domingo",
+      "company": "",
+      "rnc": "",
+      "phone": "",
+      "email": "agente@bitjet.demo",
+      "password": "bitjet123",
+      "role": "agent",
+      "miles": 0
+    }
+  ],
+  "reservations": []
+}

@@ -722,7 +722,7 @@ class BitjetApp {
       }
 
       const finalPrice = currentPrice - milesToUse;
-      const milesEarned = this.currentUser.role === "corporate" ? Math.floor(finalPrice) : 0;
+      const milesEarned = this.currentUser.role === "corporate" ? Math.floor(finalPrice * 0.1) : 0;
       const updatedMiles = Number(this.currentUser.miles || 0) - milesToUse + milesEarned;
 
       const reservationConfirmation = [
@@ -732,6 +732,7 @@ class BitjetApp {
         `Fecha y salida: ${this.formatDate(flight.date)}, ${flight.departure}`,
         `Asiento: ${seat}`,
         `Total a pagar: ${this.formatCurrency(finalPrice)}`,
+        ...(milesEarned ? [`Millas que acumulas: ${milesEarned}`] : []),
         ...(milesToUse ? [`Millas a canjear: ${milesToUse}`] : [])
       ].join("\n");
 

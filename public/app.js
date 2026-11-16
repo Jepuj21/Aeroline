@@ -141,6 +141,10 @@ class BitjetApp {
       loginDialog: document.querySelector("#login-dialog"),
       registerDialog: document.querySelector("#register-dialog"),
       emailDialog: document.querySelector("#email-dialog"),
+      confirmationDialog: document.querySelector("#confirmation-dialog"),
+      confirmationTitle: document.querySelector("#confirmation-title"),
+      confirmationMessage: document.querySelector("#confirmation-message"),
+      confirmationAccept: document.querySelector("#confirmation-accept"),
       emailClose: document.querySelector("#email-close"),
       emailDone: document.querySelector("#email-done"),
       emailRecipient: document.querySelector("#email-recipient"),
@@ -286,6 +290,22 @@ class BitjetApp {
     });
 
     this.elements.emailDialog.showModal();
+  }
+
+  // Pide confirmación en un diálogo visible dentro de la aplicación.
+  showConfirmation({ title, message, confirmLabel }) {
+    const dialog = this.elements.confirmationDialog;
+    this.elements.confirmationTitle.textContent = title;
+    this.elements.confirmationMessage.textContent = message;
+    this.elements.confirmationAccept.textContent = confirmLabel;
+    dialog.returnValue = "";
+
+    return new Promise((resolve) => {
+      dialog.addEventListener("close", () => {
+        resolve(dialog.returnValue === "confirm");
+      }, { once: true });
+      dialog.showModal();
+    });
   }
 
   // Escapa valores del JSON antes de insertarlos en plantillas HTML.
@@ -715,7 +735,13 @@ class BitjetApp {
         ...(milesToUse ? [`Millas a canjear: ${milesToUse}`] : [])
       ].join("\n");
 
-      if (!window.confirm(reservationConfirmation)) {
+      const reservationConfirmed = await this.showConfirmation({
+        title: "Confirmar reserva",
+        message: reservationConfirmation,
+        confirmLabel: "Sí, reservar"
+      });
+
+      if (!reservationConfirmed) {
         button.disabled = false;
         button.classList.remove("is-loading");
         button.innerHTML = originalButtonHtml;
@@ -878,7 +904,13 @@ class BitjetApp {
         ? `¿Confirmas la cancelación de la reserva ${reservation.id}?\n\nFaltan al menos 7 días para el vuelo. Corresponde un reembolso simulado del 80%: ${this.formatCurrency(refundAmount)}.`
         : `¿Confirmas la cancelación de la reserva ${reservation.id}?\n\nFaltan menos de 7 días para el vuelo. No corresponde reembolso según la política de cancelación.`;
 
-      if (!window.confirm(cancellationConfirmation)) {
+      const cancellationConfirmed = await this.showConfirmation({
+        title: "Confirmar cancelación",
+        message: cancellationConfirmation,
+        confirmLabel: "Sí, cancelar"
+      });
+
+      if (!cancellationConfirmed) {
         this.showMessage(this.elements.searchMessage, "La cancelación no se realizó.", "");
         return;
       }

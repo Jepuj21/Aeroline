@@ -178,6 +178,24 @@
       </div>
     </dialog>
 
+    <!-- Confirma reservas y cancelaciones con un diálogo propio de Bitjet. -->
+    <dialog class="account-dialog confirmation-dialog" id="confirmation-dialog" aria-labelledby="confirmation-title"
+      aria-describedby="confirmation-message">
+      <div class="dialog-panel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Bitjet · confirmación</p>
+            <h2 id="confirmation-title">Confirmar operación</h2>
+          </div>
+        </div>
+        <p class="confirmation-message" id="confirmation-message"></p>
+        <form class="confirmation-actions" method="dialog">
+          <button class="button button-quiet" id="confirmation-cancel" type="submit" value="cancel">Volver</button>
+          <button class="button button-primary" id="confirmation-accept" type="submit" value="confirm">Confirmar</button>
+        </form>
+      </div>
+    </dialog>
+
     <!-- Presenta el perfil y las reservas de la persona autenticada. -->
     <section class="page-view content-section account-summary" id="profile-section" aria-labelledby="profile-title" hidden>
       <div class="section-heading">

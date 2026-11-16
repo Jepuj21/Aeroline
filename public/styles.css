@@ -618,6 +618,24 @@ input::placeholder {
   border: 0;
 }
 
+.confirmation-dialog {
+  width: min(540px, calc(100% - 28px));
+}
+
+.confirmation-message {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+  white-space: pre-line;
+}
+
+.confirmation-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
+}
+
 .conditional-fields {
   display: grid;
   gap: 13px;

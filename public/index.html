@@ -28,62 +28,66 @@
       <button class="button button-primary" id="register-toggle" type="button">Crear cuenta</button>
       <button class="button button-quiet" id="reservations-toggle" type="button" hidden aria-expanded="false">Mis
         reservas</button>
+      <button class="button button-quiet" id="agent-toggle" type="button" hidden aria-expanded="false">Gestión de
+        vuelos</button>
       <button class="button button-quiet" id="logout-button" type="button" hidden>Cerrar sesión</button>
     </nav>
   </header>
 
   <!-- Contiene el buscador y la imagen ilustrada de Bitjet. -->
   <main id="inicio">
-    <section class="hero">
-      <div class="hero-copy">
-        <p class="eyebrow">Tu próximo destino, más cerca</p>
-        <h1>Vuela a tu manera.</h1>
-        <p>Encuentra tu vuelo y prepara tu próximo viaje con Bitjet.</p>
-      </div>
-      <img class="hero-art" src="/assets/bitjet-flight.svg" alt="Ilustración de un avión sobre las nubes">
-    </section>
-
-    <!-- Permite consultar vuelos sin iniciar sesión. -->
-    <section class="panel search-panel" aria-labelledby="search-title">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">Explora la ruta</p>
-          <h2 id="search-title">Busca tu vuelo</h2>
+    <div class="page-view" id="flights-page">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Tu próximo destino, más cerca</p>
+          <h1>Vuela a tu manera.</h1>
+          <p>Encuentra tu vuelo y prepara tu próximo viaje con Bitjet.</p>
         </div>
-        <span class="public-note">Consulta pública</span>
-      </div>
-      <form id="search-form" class="form-grid search-grid">
-        <label>
-          Origen
-          <input name="origin" type="search" placeholder="Ej. Santo Domingo">
-        </label>
-        <label>
-          Destino
-          <input name="destination" type="search" placeholder="Ej. Punta Cana">
-        </label>
-        <label>
-          Fecha
-          <input name="date" type="date">
-        </label>
-        <label>
-          Sale después de
-          <input name="departureAfter" type="time">
-        </label>
-        <button class="button button-primary search-submit" type="submit">Buscar vuelos</button>
-      </form>
-      <p class="form-message" id="search-message" role="status"></p>
-    </section>
+        <img class="hero-art" src="/assets/bitjet-flight.svg" alt="Ilustración de un avión sobre las nubes">
+      </section>
 
-    <!-- Muestra los vuelos encontrados a visitantes y clientes. -->
-    <section class="content-section" aria-labelledby="flights-title">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">Rutas disponibles</p>
-          <h2 id="flights-title">Vuelos</h2>
+      <!-- Permite consultar vuelos sin iniciar sesión. -->
+      <section class="panel search-panel" aria-labelledby="search-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Explora la ruta</p>
+            <h2 id="search-title">Busca tu vuelo</h2>
+          </div>
+          <span class="public-note">Consulta pública</span>
         </div>
-      </div>
-      <div id="flight-results" class="flight-list" aria-live="polite"></div>
-    </section>
+        <form id="search-form" class="form-grid search-grid">
+          <label>
+            Origen
+            <input name="origin" type="search" placeholder="Ej. Santo Domingo">
+          </label>
+          <label>
+            Destino
+            <input name="destination" type="search" placeholder="Ej. Punta Cana">
+          </label>
+          <label>
+            Fecha
+            <input name="date" type="date">
+          </label>
+          <label>
+            Sale después de
+            <input name="departureAfter" type="time">
+          </label>
+          <button class="button button-primary search-submit" type="submit">Buscar vuelos</button>
+        </form>
+        <p class="form-message" id="search-message" role="status"></p>
+      </section>
+
+      <!-- Muestra los vuelos encontrados a visitantes y clientes. -->
+      <section class="content-section" aria-labelledby="flights-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Rutas disponibles</p>
+            <h2 id="flights-title">Vuelos</h2>
+          </div>
+        </div>
+        <div id="flight-results" class="flight-list" aria-live="polite"></div>
+      </section>
+    </div>
 
     <!-- Muestra el inicio de sesión en un diálogo independiente. -->
     <dialog class="account-dialog" id="login-dialog" aria-labelledby="login-title">
@@ -175,7 +179,7 @@
     </dialog>
 
     <!-- Presenta el perfil y las reservas de la persona autenticada. -->
-    <section class="content-section account-summary" id="profile-section" aria-labelledby="profile-title" hidden>
+    <section class="page-view content-section account-summary" id="profile-section" aria-labelledby="profile-title" hidden>
       <div class="section-heading">
         <div>
           <p class="eyebrow">Área personal</p>
@@ -187,7 +191,7 @@
     </section>
 
     <!-- Permite al agente añadir vuelos y actualizar los vuelos existentes. -->
-    <section class="content-section agent-section" id="agent-section" aria-labelledby="agent-title" hidden>
+    <section class="page-view content-section agent-section" id="agent-section" aria-labelledby="agent-title" hidden>
       <div class="section-heading">
         <div>
           <p class="eyebrow">Herramientas internas</p>

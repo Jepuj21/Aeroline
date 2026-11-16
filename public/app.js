@@ -136,6 +136,7 @@ class BitjetApp {
       accountToggle: document.querySelector("#account-toggle"),
       registerToggle: document.querySelector("#register-toggle"),
       reservationsToggle: document.querySelector("#reservations-toggle"),
+      agentToggle: document.querySelector("#agent-toggle"),
       logoutButton: document.querySelector("#logout-button"),
       loginDialog: document.querySelector("#login-dialog"),
       registerDialog: document.querySelector("#register-dialog"),
@@ -155,6 +156,7 @@ class BitjetApp {
       corporateFields: document.querySelector("#corporate-fields"),
       searchForm: document.querySelector("#search-form"),
       searchMessage: document.querySelector("#search-message"),
+      flightsPage: document.querySelector("#flights-page"),
       flightResults: document.querySelector("#flight-results"),
       profileSection: document.querySelector("#profile-section"),
       reservationList: document.querySelector("#reservation-list"),
@@ -184,6 +186,7 @@ class BitjetApp {
         await this.updateAccountView();
       } else {
         this.renderFlights(this.flightsCache);
+        this.syncPageFromLocation();
       }
     } catch (error) {
       this.showMessage(this.elements.searchMessage, `No se pudieron cargar los datos locales: ${error.message}`, "error");
@@ -196,6 +199,7 @@ class BitjetApp {
     this.elements.accountToggle.addEventListener("click", () => this.toggleAccount("login"));
     this.elements.registerToggle.addEventListener("click", () => this.toggleAccount("register"));
     this.elements.reservationsToggle.addEventListener("click", this.toggleReservationsPanel.bind(this));
+    this.elements.agentToggle.addEventListener("click", () => this.navigateToPage("gestion-vuelos"));
     this.elements.loginClose.addEventListener("click", () => this.elements.loginDialog.close());
     this.elements.registerClose.addEventListener("click", () => this.elements.registerDialog.close());
     this.elements.emailClose.addEventListener("click", () => this.elements.emailDialog.close());
@@ -210,6 +214,8 @@ class BitjetApp {
     this.elements.reservationList.addEventListener("click", this.handleReservationAction.bind(this));
     this.elements.newFlightForm.addEventListener("submit", this.addFlight.bind(this));
     this.elements.agentFlightList.addEventListener("submit", this.updateFlight.bind(this));
+    window.addEventListener("hashchange", this.syncPageFromLocation.bind(this));
+    window.addEventListener("popstate", this.syncPageFromLocation.bind(this));
   }
 
   // Muestra los datos de compañía solo para cuentas corporativas y los exige en ese caso.
@@ -331,20 +337,74 @@ class BitjetApp {
     targetForm.querySelector("input").focus();
   }
 
-  // Alterna la vista de reservas para clientes autenticados.
+  // Abre la página de reservas para clientes autenticados.
   toggleReservationsPanel() {
     if (!this.currentUser || this.currentUser.role === "agent") {
       return;
     }
 
-    const isHidden = this.elements.profileSection.hidden;
-    this.elements.profileSection.hidden = !isHidden;
-    this.elements.reservationsToggle.setAttribute("aria-expanded", String(!this.elements.profileSection.hidden));
-    this.elements.reservationsToggle.classList.toggle("is-active", !this.elements.profileSection.hidden);
+    this.navigateToPage("reservas");
+  }
 
-    if (!this.elements.profileSection.hidden) {
-      this.elements.profileSection.scrollIntoView({ behavior: "smooth", block: "start" });
+  // Cambia la vista y mantiene una ruta hash navegable e independiente.
+  navigateToPage(page) {
+    if (page === "reservas" && (!this.currentUser || this.currentUser.role === "agent")) {
+      this.showMessage(this.elements.searchMessage, "Inicia sesión como cliente para ver tus reservas.", "error");
+      if (!this.currentUser) {
+        this.toggleAccount("login");
+      }
+      return;
     }
+
+    if (page === "gestion-vuelos" && this.currentUser?.role !== "agent") {
+      this.showMessage(this.elements.searchMessage, "La gestión de vuelos es exclusiva para agentes.", "error");
+      return;
+    }
+
+    const hash = `#${page}`;
+    if (location.hash !== hash) {
+      history.pushState({ page }, "", hash);
+    }
+    this.setActivePage(page);
+  }
+
+  // Restaura la vista apropiada cuando se abre un enlace o se usa atrás/adelante.
+  syncPageFromLocation() {
+    const requestedPage = location.hash.slice(1) || "inicio";
+    const validPages = ["inicio", "reservas", "gestion-vuelos"];
+    const page = validPages.includes(requestedPage) ? requestedPage : "inicio";
+
+    if (page === "reservas" && (!this.currentUser || this.currentUser.role === "agent")) {
+      history.replaceState(null, "", "#inicio");
+      this.setActivePage("inicio");
+      this.showMessage(this.elements.searchMessage, "Inicia sesión como cliente para ver tus reservas.", "error");
+      if (!this.currentUser) {
+        this.toggleAccount("login");
+      }
+      return;
+    }
+
+    if (page === "gestion-vuelos" && this.currentUser?.role !== "agent") {
+      history.replaceState(null, "", "#inicio");
+      this.setActivePage("inicio");
+      this.showMessage(this.elements.searchMessage, "La gestión de vuelos es exclusiva para agentes.", "error");
+      return;
+    }
+
+    this.setActivePage(page);
+  }
+
+  // Muestra solo la página solicitada y actualiza el estado de navegación accesible.
+  setActivePage(page) {
+    const isReservationsPage = page === "reservas";
+    const isAgentPage = page === "gestion-vuelos";
+    this.elements.flightsPage.hidden = page !== "inicio";
+    this.elements.profileSection.hidden = !isReservationsPage;
+    this.elements.agentSection.hidden = !isAgentPage;
+    this.elements.reservationsToggle.setAttribute("aria-expanded", String(isReservationsPage));
+    this.elements.agentToggle.setAttribute("aria-expanded", String(isAgentPage));
+    this.elements.reservationsToggle.classList.toggle("is-active", isReservationsPage);
+    this.elements.agentToggle.classList.toggle("is-active", isAgentPage);
   }
 
   // Filtra los vuelos locales por ruta, fecha y hora de salida seleccionadas.
@@ -473,6 +533,9 @@ class BitjetApp {
       await this.updateAccountView();
       this.elements.loginDialog.close();
       this.showMessage(this.elements.searchMessage, `Sesión iniciada. Bienvenido/a, ${user.name}.`, "success");
+      if (user.role === "agent") {
+        this.navigateToPage("gestion-vuelos");
+      }
     } catch (error) {
       this.showMessage(message, `No se pudo iniciar sesión: ${error.message}`, "error");
     }
@@ -547,43 +610,44 @@ class BitjetApp {
     this.elements.registerToggle.hidden = Boolean(this.currentUser);
     this.elements.logoutButton.hidden = !this.currentUser;
     this.elements.reservationsToggle.hidden = !this.currentUser || this.currentUser.role === "agent";
+    this.elements.agentToggle.hidden = !this.currentUser || this.currentUser.role !== "agent";
 
     if (this.currentUser) {
       this.elements.logoutButton.textContent = `Cerrar sesión (${this.currentUser.name})`;
     }
 
     const isClient = Boolean(this.currentUser) && this.currentUser.role !== "agent";
-    this.elements.profileSection.hidden = !isClient;
-    this.elements.reservationsToggle.setAttribute("aria-expanded", String(!this.elements.profileSection.hidden));
-    this.elements.reservationsToggle.classList.toggle("is-active", !this.elements.profileSection.hidden);
-    this.elements.agentSection.hidden = !this.currentUser || this.currentUser.role !== "agent";
+    this.elements.profileSection.hidden = true;
+    this.elements.agentSection.hidden = true;
     await this.loadFlights();
 
     if (this.currentUser?.role === "agent") {
       await this.renderAgentFlights();
-      return;
-    }
-
-    if (this.currentUser) {
+    } else if (isClient) {
       this.elements.milesBalance.textContent = this.currentUser.role === "corporate"
         ? `Saldo: ${this.currentUser.miles} millas`
         : "Cuenta minorista";
       await this.renderReservations();
     }
+
+    this.syncPageFromLocation();
   }
 
   // Cierra la sesión del navegador y conserva visibles los vuelos públicos.
   logout() {
     this.currentUser = null;
     sessionStorage.removeItem("bitjetUserId");
-    this.elements.profileSection.hidden = true;
-    this.elements.agentSection.hidden = true;
     this.elements.accountToggle.hidden = false;
     this.elements.registerToggle.hidden = false;
     this.elements.reservationsToggle.hidden = true;
+    this.elements.agentToggle.hidden = true;
     this.elements.reservationsToggle.setAttribute("aria-expanded", "false");
     this.elements.reservationsToggle.classList.remove("is-active");
+    this.elements.agentToggle.setAttribute("aria-expanded", "false");
+    this.elements.agentToggle.classList.remove("is-active");
     this.elements.logoutButton.hidden = true;
+    history.replaceState(null, "", "#inicio");
+    this.setActivePage("inicio");
     this.renderFlights(this.flightsCache);
   }
 
@@ -640,6 +704,24 @@ class BitjetApp {
       const finalPrice = currentPrice - milesToUse;
       const milesEarned = this.currentUser.role === "corporate" ? Math.floor(finalPrice) : 0;
       const updatedMiles = Number(this.currentUser.miles || 0) - milesToUse + milesEarned;
+
+      const reservationConfirmation = [
+        `¿Confirmas la reserva del vuelo ${flight.id}?`,
+        "",
+        `Ruta: ${flight.originName} → ${flight.destinationName}`,
+        `Fecha y salida: ${this.formatDate(flight.date)}, ${flight.departure}`,
+        `Asiento: ${seat}`,
+        `Total a pagar: ${this.formatCurrency(finalPrice)}`,
+        ...(milesToUse ? [`Millas a canjear: ${milesToUse}`] : [])
+      ].join("\n");
+
+      if (!window.confirm(reservationConfirmation)) {
+        button.disabled = false;
+        button.classList.remove("is-loading");
+        button.innerHTML = originalButtonHtml;
+        return;
+      }
+
       const occupiedSeats = [...flight.occupiedSeats, seat];
 
       await this.api(`/flights/${encodeURIComponent(flight.id)}`, {
@@ -788,9 +870,19 @@ class BitjetApp {
       const flight = await this.api(`/flights/${encodeURIComponent(reservation.flightId)}`);
       // El monto se registra en JSON; no se transfiere dinero en esta demostración local.
       // Sugerencia: conectar un procesador de pagos antes de habilitar devoluciones reales.
-      const refundAmount = this.isRefundEligible(reservation.flightDate, reservation.departure)
+      const refundEligible = this.isRefundEligible(reservation.flightDate, reservation.departure);
+      const refundAmount = refundEligible
         ? Math.round(Number(reservation.price) * 0.8)
         : 0;
+      const cancellationConfirmation = refundEligible
+        ? `¿Confirmas la cancelación de la reserva ${reservation.id}?\n\nFaltan al menos 7 días para el vuelo. Corresponde un reembolso simulado del 80%: ${this.formatCurrency(refundAmount)}.`
+        : `¿Confirmas la cancelación de la reserva ${reservation.id}?\n\nFaltan menos de 7 días para el vuelo. No corresponde reembolso según la política de cancelación.`;
+
+      if (!window.confirm(cancellationConfirmation)) {
+        this.showMessage(this.elements.searchMessage, "La cancelación no se realizó.", "");
+        return;
+      }
+
       const occupiedSeats = flight.occupiedSeats.filter((seat) => seat !== reservation.seat);
 
       await this.api(`/flights/${encodeURIComponent(flight.id)}`, {

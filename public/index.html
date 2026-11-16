@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="es">
+
 <head>
   <!-- Define la codificación y la adaptación de la página a pantallas móviles. -->
   <meta charset="utf-8">
@@ -14,6 +15,7 @@
   <!-- Ejecuta la lógica de la página después de analizar el HTML. -->
   <script src="/app.js" defer></script>
 </head>
+
 <body>
   <!-- Presenta la marca y las acciones principales de la cuenta. -->
   <header class="site-header">
@@ -24,7 +26,8 @@
     <nav class="header-actions" aria-label="Navegación principal">
       <button class="button button-quiet" id="account-toggle" type="button">Iniciar sesión</button>
       <button class="button button-primary" id="register-toggle" type="button">Crear cuenta</button>
-      <button class="button button-quiet" id="reservations-toggle" type="button" hidden aria-expanded="false">Mis reservas</button>
+      <button class="button button-quiet" id="reservations-toggle" type="button" hidden aria-expanded="false">Mis
+        reservas</button>
       <button class="button button-quiet" id="logout-button" type="button" hidden>Cerrar sesión</button>
     </nav>
   </header>
@@ -99,6 +102,9 @@
           <p class="form-message" id="login-message" role="status"></p>
           <!-- Esta cuenta de demostración permite probar la gestión de vuelos del agente. -->
           <p class="demo-hint">Agente de demostración: agente@bitjet.demo / bitjet123</p>
+          <p class="demo-hint">Minorista: Client_Mino@g.com / 12345678</p>
+          <p class="demo-hint">corpotativo: Client_Corp@g.com / 12345678</p>
+
         </form>
       </div>
     </dialog>
@@ -118,7 +124,8 @@
           <label>Dirección<input name="address" autocomplete="street-address" required></label>
           <label>Teléfono<input name="phone" type="tel" autocomplete="tel" required></label>
           <label>Correo electrónico<input name="email" type="email" autocomplete="email" required></label>
-          <label>Contraseña<input name="password" type="password" autocomplete="new-password" minlength="6" required></label>
+          <label>Contraseña<input name="password" type="password" autocomplete="new-password" minlength="6"
+              required></label>
           <label>Tipo de cuenta
             <select id="account-type" name="accountType" required>
               <option value="retail">Cuenta minorista</option>
@@ -198,7 +205,8 @@
         <label>Salida<input name="departure" type="time" required></label>
         <label>Llegada<input name="arrival" type="time" required></label>
         <label>Precio (DOP)<input name="price" type="number" min="1" step="1" required></label>
-        <label class="wide-field">Asientos separados por coma<input name="seats" placeholder="1A, 1B, 2A, 2B" required></label>
+        <label class="wide-field">Asientos separados por coma<input name="seats" placeholder="1A, 1B, 2A, 2B"
+            required></label>
         <button class="button button-primary" type="submit">Agregar vuelo</button>
         <p class="form-message wide-field" id="agent-message" role="status"></p>
       </form>
@@ -216,4 +224,5 @@
     <p>Demo: las cuentas y reservas se guardan solo en este navegador.</p>
   </footer>
 </body>
+
 </html>

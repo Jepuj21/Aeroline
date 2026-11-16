@@ -139,6 +139,14 @@ class BitjetApp {
       logoutButton: document.querySelector("#logout-button"),
       loginDialog: document.querySelector("#login-dialog"),
       registerDialog: document.querySelector("#register-dialog"),
+      emailDialog: document.querySelector("#email-dialog"),
+      emailClose: document.querySelector("#email-close"),
+      emailDone: document.querySelector("#email-done"),
+      emailRecipient: document.querySelector("#email-recipient"),
+      emailSubject: document.querySelector("#email-subject"),
+      emailGreeting: document.querySelector("#email-greeting"),
+      emailMessage: document.querySelector("#email-message"),
+      emailDetails: document.querySelector("#email-details"),
       loginClose: document.querySelector("#login-close"),
       registerClose: document.querySelector("#register-close"),
       loginForm: document.querySelector("#login-form"),
@@ -190,6 +198,8 @@ class BitjetApp {
     this.elements.reservationsToggle.addEventListener("click", this.toggleReservationsPanel.bind(this));
     this.elements.loginClose.addEventListener("click", () => this.elements.loginDialog.close());
     this.elements.registerClose.addEventListener("click", () => this.elements.registerDialog.close());
+    this.elements.emailClose.addEventListener("click", () => this.elements.emailDialog.close());
+    this.elements.emailDone.addEventListener("click", () => this.elements.emailDialog.close());
     this.elements.logoutButton.addEventListener("click", this.logout.bind(this));
     this.elements.searchForm.addEventListener("submit", this.searchFlights.bind(this));
     this.elements.loginForm.addEventListener("submit", this.login.bind(this));
@@ -253,6 +263,23 @@ class BitjetApp {
     } else {
       delete target.dataset.kind;
     }
+  }
+
+  // Presenta en un diálogo el mensaje que recibiría el cliente, sin enviar un correo real.
+  showEmailSimulation({ recipient, subject, greeting, message, details }) {
+    this.elements.emailRecipient.textContent = recipient;
+    this.elements.emailSubject.textContent = subject;
+    this.elements.emailGreeting.textContent = greeting;
+    this.elements.emailMessage.textContent = message;
+    this.elements.emailDetails.replaceChildren();
+
+    details.forEach((detail) => {
+      const item = document.createElement("li");
+      item.textContent = detail;
+      this.elements.emailDetails.append(item);
+    });
+
+    this.elements.emailDialog.showModal();
   }
 
   // Escapa valores del JSON antes de insertarlos en plantillas HTML.
@@ -491,13 +518,24 @@ class BitjetApp {
         })
       });
 
+      const customerName = user.name;
       this.currentUser = user;
       sessionStorage.setItem("bitjetUserId", String(user.id));
       this.elements.registerForm.reset();
       this.syncCorporateFields();
       await this.updateAccountView();
       this.elements.registerDialog.close();
-      this.showMessage(this.elements.searchMessage, "Cuenta creada. El correo de confirmación se simula en esta versión local.", "success");
+      this.showMessage(this.elements.searchMessage, "Cuenta creada. Mostramos el correo de bienvenida de demostración.", "success");
+      this.showEmailSimulation({
+        recipient: user.email,
+        subject: "¡Te damos la bienvenida a Bitjet!",
+        greeting: `Hola, ${customerName}:`,
+        message: "Tu cuenta fue creada correctamente. Ya puedes buscar vuelos y preparar tu próximo viaje.",
+        details: [
+          `Tipo de cuenta: ${accountType === "corporate" ? "Corporativa" : "Minorista"}`,
+          `Correo de la cuenta: ${user.email}`
+        ]
+      });
     } catch (error) {
       this.showMessage(message, `No se pudo crear la cuenta: ${error.message}`, "error");
     }
@@ -658,9 +696,24 @@ class BitjetApp {
         }
       }
 
-      // Sugerencia: conectar aquí el gestor de mails requerido para enviar confirmaciones reales.
-      this.showMessage(this.elements.searchMessage, `✈ Reserva ${reservation.id} confirmada. La notificación por correo se simula localmente.`, "success");
+      this.showMessage(this.elements.searchMessage, `✈ Reserva ${reservation.id} confirmada. Mostramos el correo de demostración.`, "success");
       await this.updateAccountView();
+      this.showEmailSimulation({
+        recipient: this.currentUser.email,
+        subject: `Confirmación de reserva ${reservation.id}`,
+        greeting: `Hola, ${this.currentUser.name}:`,
+        message: "Tu vuelo está reservado. Aquí tienes el resumen de tu viaje:",
+        details: [
+          `Reserva: ${reservation.id}`,
+          `Vuelo: ${reservation.flightNumber}`,
+          `Ruta: ${reservation.origin} → ${reservation.destination}`,
+          `Fecha y salida: ${this.formatDate(reservation.flightDate)}, ${reservation.departure}`,
+          `Asiento: ${reservation.seat}`,
+          `Total: ${this.formatCurrency(reservation.price)}`,
+          ...(milesEarned ? [`Millas acumuladas: ${milesEarned}`] : []),
+          ...(milesToUse ? [`Millas canjeadas: ${milesToUse}`] : [])
+        ]
+      });
     } catch (error) {
       button.disabled = false;
       button.classList.remove("is-loading");
@@ -771,6 +824,21 @@ class BitjetApp {
       this.showMessage(this.elements.searchMessage, `Reserva cancelada. Reembolso de demostración: ${this.formatCurrency(refundAmount)}. El correo se simula localmente.`, "success");
       await this.loadFlights();
       await this.renderReservations();
+      this.showEmailSimulation({
+        recipient: this.currentUser.email,
+        subject: `Cancelación de reserva ${reservation.id}`,
+        greeting: `Hola, ${this.currentUser.name}:`,
+        message: "Tu solicitud de cancelación fue procesada. Este es el resumen:",
+        details: [
+          `Reserva: ${reservation.id}`,
+          `Vuelo: ${reservation.flightNumber}`,
+          `Ruta: ${reservation.origin} → ${reservation.destination}`,
+          `Fecha y salida: ${this.formatDate(reservation.flightDate)}, ${reservation.departure}`,
+          `Asiento liberado: ${reservation.seat}`,
+          `Estado: Cancelada`,
+          `Reembolso de demostración: ${this.formatCurrency(refundAmount)}`
+        ]
+      });
     } catch (error) {
       this.showMessage(this.elements.searchMessage, `No se pudo cancelar la reserva: ${error.message}`, "error");
     }

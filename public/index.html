@@ -135,6 +135,38 @@
       </div>
     </dialog>
 
+    <!-- Simula el correo que recibiría el cliente después de una operación. -->
+    <dialog class="email-dialog" id="email-dialog" aria-labelledby="email-title">
+      <div class="email-window">
+        <div class="email-window-header">
+          <div class="email-brand">
+            <img src="/assets/bitjet-logo.svg" alt="" width="34" height="34">
+            <div>
+              <p class="eyebrow">Bitjet · correo de demostración</p>
+              <h2 id="email-title">Mensaje enviado</h2>
+            </div>
+          </div>
+          <button class="icon-button" id="email-close" type="button" aria-label="Cerrar correo">×</button>
+        </div>
+        <div class="email-status"><span aria-hidden="true">✓</span> Enviado al cliente (simulación)</div>
+        <div class="email-fields">
+          <p><span>De</span><strong>Bitjet &lt;notificaciones@bitjet.demo&gt;</strong></p>
+          <p><span>Para</span><strong id="email-recipient"></strong></p>
+          <p><span>Asunto</span><strong id="email-subject"></strong></p>
+        </div>
+        <div class="email-content">
+          <p id="email-greeting" class="email-greeting"></p>
+          <p id="email-message"></p>
+          <ul id="email-details" class="email-details"></ul>
+          <p class="email-signature">¡Gracias por volar con nosotros!<br><strong>Equipo Bitjet</strong></p>
+        </div>
+        <div class="email-window-footer">
+          <span>Esta pantalla simula un correo; no se envió ningún mensaje real.</span>
+          <button class="button button-primary" id="email-done" type="button">Listo</button>
+        </div>
+      </div>
+    </dialog>
+
     <!-- Presenta el perfil y las reservas de la persona autenticada. -->
     <section class="content-section account-summary" id="profile-section" aria-labelledby="profile-title" hidden>
       <div class="section-heading">
